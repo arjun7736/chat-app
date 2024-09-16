@@ -4,17 +4,32 @@ import Victory from "../assets/victory.svg";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import Background from "../assets/login2.png"
+import axios from "../axios/axiosIntersepter"
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
-  const handleLogin = () => {
-    console.log("Login");
+const navigate =useNavigate()
+  const handleLogin = async() => {
+    await  axios.post("/api/auth/login",{email,password}).then((response)=>{
+     navigate("/dashboard")
+     toast.success("Login Successfully")
+     localStorage.setItem("token",response.data.token)
+     localStorage.setItem("user",response.data.user)
+    }).catch((error)=>{
+      toast.error(error.response.data.error.message)
+    })
   };
-  const handleSignup = () => {
-    console.log("Signup");
+  const handleSignup = async() => {
+    await axios.post("/api/auth/signup",{email,password,confirmPassword}).then(()=>{
+      navigate("/login")
+      toast("Accound Created now Login")
+    }).catch((error)=>{
+      toast(error.response.data.error.message)
+    })
   };
   return (
     <div className="h-[100vh] w-[100vw] flex items-center justify-center">
@@ -82,7 +97,7 @@ const Login = () => {
                 />
                 <Input
                   placeholder="ConfirmPassword"
-                  type="cofirmpassword"
+                  type="passsword"
                   className="rounded-full p-6"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
@@ -92,7 +107,7 @@ const Login = () => {
             </Tabs>
           </div>
         </div>
-        <div className="flex justify-center items-center">
+        <div className="flex justify-center items-center ">
             <img src={Background} alt="Background image" />
         </div>
       </div>

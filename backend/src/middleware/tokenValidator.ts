@@ -6,7 +6,7 @@ interface AuthRequest extends Request {
   user?: string | object; 
 }
 
-const verifyToken = (req: AuthRequest, res: Response, next: NextFunction) => {
+const verifyToken = async(req: AuthRequest, res: Response, next: NextFunction) => {
   try {
     const authHeader = req.headers['authorization'];
 
@@ -15,8 +15,9 @@ const verifyToken = (req: AuthRequest, res: Response, next: NextFunction) => {
     }
 
     const token = authHeader.split(' ')[1];
+    console.log(token,process.env.JWT_SECRET)
 
-    jwt.verify(token, process.env.JWT_SECRET as string, (err, decoded) => {
+   await jwt.verify(token, process.env.JWT_SECRET as string, (err, decoded) => {
       if (err) {
         throw new CustomError(403,"Forbidden: Invalid token")
       }
