@@ -1,5 +1,11 @@
 import mongoose from "mongoose";
 
-export class User{
-    constructor(public _id:mongoose.Types.ObjectId,public email:string,public profilePicture:string){}
+export class User {
+  constructor(
+    public _id: mongoose.Types.ObjectId,
+    public email: string,
+    public profilePicture: string,
+    public phoneNumber:number,
+    public name:string
+  ) {}
 }

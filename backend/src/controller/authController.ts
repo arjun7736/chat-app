@@ -29,7 +29,13 @@ export const userLogin = async (
 
     res.json({
       token: token,
-      user: new User(existUser._id, existUser.email, existUser.profilePicture),
+      user: new User(
+        existUser._id,
+        existUser.email,
+        existUser.profilePicture,
+        existUser.phoneNumber,
+        existUser.name
+      ),
     });
   } catch (error) {
     next(error);
@@ -49,13 +55,17 @@ export const userSignup = async (
     if (password !== confirmPassword)
       throw new CustomError(400, "Password and confirm password must be same");
 
-    if(!PasswordValidator(password)) throw new CustomError(400, "Try to add uppercase,lowercase,symbol,number in password");
+    if (!PasswordValidator(password))
+      throw new CustomError(
+        400,
+        "Try to add uppercase,lowercase,symbol,number in password"
+      );
 
     const existUser = await UserDB.findOne({ email });
     if (existUser) throw new CustomError(400, "User already exist");
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await  UserDB.create({
+    await UserDB.create({
       email,
       password: hashedPassword,
       profilePicture: "",
