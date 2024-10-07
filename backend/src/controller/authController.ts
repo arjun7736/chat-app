@@ -18,7 +18,6 @@ export const userLogin = async (
 
     const existUser = await UserDB.findOne({ email });
     if (!existUser) throw new CustomError(400, "User not found");
-
     const valiedPass = await bcrypt.compare(password, existUser.password);
     if (!valiedPass) throw new CustomError(400, "Email or Password is Wrong");
 
